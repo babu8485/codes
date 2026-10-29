@@ -1,0 +1,59 @@
+Step 1: Create MVC Project
+     1. Open Visual Studio 2026.
+     2. Create: ASP.NET Core Web App (Model-View-Controller).
+     3. Project Name: AuthDemo
+     4. Framework: .NET 10
+     5. Click Next.
+Step 2: Select Authentication Type
+In the Additional Information window:
+     •   Choose: Individual Accounts
+     •   Click: Create
+Visual Studio automatically configures:
+     •   Authentication
+     •   Authorization
+     •   Identity
+     •   Login/Register pages
+Step 3: Build Project
+Go to:
+Build → Rebuild Solution
+Step 4: Create Database
+Open:
+Tools → NuGet Package Manager → Package Manager Console
+Run:
+Update-Database
+Identity tables are automatically created.
+Step 5: Run Application
+Run the application.
+Step 6: Register User
+      1. Click Register (at the top-right corner of the web application).
+      2. Enter:
+             o    Email
+             o    Password
+             o    Confirm Password
+      3. Click Register.
+User account created successfully.
+Step 7: Login
+      1. Click Login (at the top-right corner of the web application).
+      2. Enter your credentials:
+             o    Email
+             o    Password
+      3. Click Log in.
+Step 8: Add Authorized Page
+Open HomeController.cs.
+At the top, add:
+using Microsoft.AspNetCore.Authorization;
+Add the following method:
+[Authorize]
+public IActionResult Secret()
+{
+     return View();
+}
+Step 9: Create Secret View
+Create the folder only if needed:
+Views/Home
+Right-click the Home folder → Add → View → Select Razor View – Empty.
+View Name: Secret.cshtml
+Write the following code in the empty area below the prewritten lines:
+<h2>Authorized Users Only</h2>
+Step 10: Test Authorization
+Run the application and open the following URL by appending it to the existing URL:
