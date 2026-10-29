@@ -1,0 +1,105 @@
+Step 1: Create ASP.NET Core MVC Project
+      1. Open Visual Studio 2026.
+      2. Click Create a new project.
+      3. Select ASP.NET Core Web App (Model-View-Controller).
+      4. Project Name: SWOfflinePWA
+      5. Framework: .NET 10 or the latest available.
+Click Create.
+Step 2: Create Home Page
+In Solution Explorer, open:
+Views > Home > Index.cshtml
+Replace the code with:
+<div class="text-center">
+     <h1>College Information Portal</h1>
+     <h3>PWA Offline Demo</h3>
+     <p>This application works without internet connection.</p>
+</div>
+Step 3: Create Manifest File
+      1. Right-click wwwroot.
+      2. Select Add > New Item.
+      3. Choose JSON File.
+      4. Name it manifest.json.
+Write the following:
+{
+    "name": "Offline PWA",
+    "short_name": "OfflinePWA",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0d6efd",
+    "icons": [
+        {
+            "src": "/icons/icon1.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon2.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+Step 4: Create Icons Folder
+            1. Right-click wwwroot.
+            2. Select Add > New Folder.
+            3. Name it icons.
+            4. Add two downloaded icon files inside the folder:
+                   o   icon1.png
+                  o   icon2.png
+Step 5: Create Service Worker
+Inside wwwroot:
+      1. Select Add > New Item.
+      2. Choose JavaScript File.
+      3. Name it service-worker.js.
+Write the following code:
+const CACHE_NAME = "pwa-cache-v1";
+const urlsToCache = [
+     "/Home/Index"
+];
+self.addEventListener("install", event => {
+     event.waitUntil(
+          caches.open(CACHE_NAME)
+            .then(cache => {
+                 return cache.addAll(urlsToCache);
+            })
+     );
+});
+self.addEventListener("fetch", event => {
+     event.respondWith(
+          caches.match(event.request)
+            .then(response => {
+                 return response || fetch(event.request);
+            })
+     );
+});
+Step 6: Register Manifest
+In Solution Explorer, open:
+Views > Shared > _Layout.cshtml
+Inside the <head> tag, add:
+<link rel="manifest" href="/manifest.json">
+Step 7: Register Service Worker
+Before the closing </body> tag, add:
+<script>
+     if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(() => console.log('Service Worker Registered'));
+     }
+</script>
+Step 8: Verify Static Files
+In Solution Explorer, open Program.cs.
+Ensure the following code exists. If it does not, add it before mapping the routes:
+app.UseStaticFiles();
+Step 9: Run Application
+Run the ASP.NET Core MVC application from Visual Studio.
+Step 10: Verify Service Worker
+Open Developer Tools in the browser:
+     1. Press F12.
+     2. Open Application.
+     3. Select Service Workers.
+     4. Ensure service-worker.js is activated and running.
+Step 11: Test Offline Mode
+     1. Open Developer Tools by pressing F12.
+     2. Select the Network tab.
+     3. Select Offline.
+     4. Refresh the webpage.
