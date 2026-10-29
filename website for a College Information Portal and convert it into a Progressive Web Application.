@@ -1,0 +1,77 @@
+Input:
+In Solution explorer Go to: Views→Home→Index.cshtml
+<div class="text-center">
+  <h1>College Information Portal</h1>
+     <h3>Welcome to BNN College</h3>
+     <p>Course Offered:</p>
+     <ul>
+       <li>BSc IT</li>
+       <li>BSc CS</li>
+       <li>BCA</li>
+     </ul>
+  <p>Contact:9876543210</p>
+</div>
+In Solution explorer Right-click wwwroot Folder→Add→New Item
+Search and Select: JavaScript File
+Give Name: Service-worker.js
+Click: Add
+Open: Service-worker.js
+Write:
+self.addEventListener('install', function (event) {
+   console.log('Service Worker Installed');
+});
+self.addEventListener('fetch', function (event) {
+   console.log('Fetching:',event.request.url);
+});
+Step: Create Manifest File
+Right-click: wwwroot
+Select: Add→New Item
+Search and Select: JSON File
+Name: manifest.json
+Write:
+{
+    "name": "College Information Portal",
+    "short_name": "College Portal",
+    "description": "Progressive Web Application for College Information",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "icons": [
+      {
+        "src": "/icons/icon-1.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "/icons/icon-2.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+}
+Step: Create icons Folder
+Right-click: wwwroot
+Select: Add→New Folder
+Name: icons
+Add any two small, download icons file:
+              •   icon-1.png
+              •   icon-2.png
+inside icons folder.
+Step: Register Manifest
+Open: Views→Shared→_Layout.cshtml
+Inside<head>add: <link rel="manifest" href="/manifest.json">
+Step: Register Service Worker in same above file
+At bottom before: </body>
+Add:
+<script>
+   if('serviceWorker'in navigator){
+      navigator.serviceWorker.register('/service-worker.js')
+      .then(()=>console.log('Service Worker Registered'));
+   }
+</script>
+Step: Verify Static File Enabled
+In Solution Explorer Open:Program.cs
+Ensure this line exist, if not then add at appropriate place:
+       app.UseStaticFiles();
+Step: Run Application
