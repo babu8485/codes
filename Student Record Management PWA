@@ -1,0 +1,164 @@
+Step 1: Create ASP.NET Core MVC Project
+         1. Open Visual Studio 2026.
+         2. Click Create a new project.
+         3. Select ASP.NET Core Web App (Model-View-Controller).
+         4. Project Name: StudentRecordPWA
+         5. Framework: .NET 10 or the latest available.
+Click Create.
+Step 2: Create Student Model
+In Solution Explorer, right-click:
+Models > Add > Class
+Name the file Student.cs.
+Write:
+namespace StudentRecordPWA.Models
+{
+     public class Student
+     {
+          public int Id { get; set; }
+          public string Name { get; set; }
+          public string Course { get; set; }
+          public int Age { get; set; }
+     }
+}
+Step 3: Create Student Controller
+         1. Right-click Controllers.
+         2. Select Add > Controller.
+         3. Choose MVC Controller - Empty.
+         4. Name it StudentsController.
+Step 4: Write Controller Code
+Open StudentsController.cs and write:
+using Microsoft.AspNetCore.Mvc;
+using StudentRecordPWA.Models;
+using System.Collections.Generic;
+namespace StudentRecordPWA.Controllers
+{
+     public class StudentsController : Controller
+     {
+          public IActionResult Index()
+          {
+              List<Student> students = new List<Student>()
+              {
+                  new Student
+                  {
+                       Id = 1,
+                       Name = "Rahul",
+                       Course = "BSc IT",
+                       Age = 20
+                  },
+                  new Student
+                  {
+                        Id = 2,
+                        Name = "Amit",
+                        Course = "BCA",
+                        Age = 21
+                   },
+                   new Student
+                   {
+                        Id = 3,
+                        Name = "Sneha",
+                        Course = "BSc CS",
+                        Age = 19
+                   }
+              };
+              return View(students);
+          }
+     }
+}
+Step 5: Create View Folder
+In Solution Explorer, create the following folder:
+Views > Students
+If the Students folder does not exist, create it inside Views.
+Step 6: Create Index View
+Right-click Views/Students and select:
+         1. Add > View
+         2. Choose Razor View - Empty.
+         3. Name it Index.cshtml.
+Write the following code:
+@model IEnumerable<StudentRecordPWA.Models.Student>
+<h2>Student Records</h2>
+<table border="1" cellpadding="10">
+     <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Course</th>
+          <th>Age</th>
+     </tr>
+     @foreach (var item in Model)
+     {
+          <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.Course</td>
+            <td>@item.Age</td>
+          </tr>
+     }
+</table>
+Step 7: Create Manifest File
+Inside wwwroot, create a file named manifest.json.
+Write:
+{
+    "name": "Student Record PWA",
+    "short_name": "StudentPWA",
+    "start_url": "/Students",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0d6efd",
+    "icons": [
+        {
+            "src": "/icons/icon1.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon2.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+Step 8: Create Icons Folder
+            1. Right-click wwwroot.
+            2. Select Add > New Folder.
+            3. Name it icons.
+            4. Add two icon files:
+                  o   icon1.png
+                  o   icon2.png
+Place both files inside the icons folder.
+Step 9: Create Service Worker
+Inside wwwroot, create a JavaScript file named service-worker.js.
+Write:
+const CACHE_NAME = "student-pwa-cache";
+const urlsToCache = [
+     "/Students"
+];
+self.addEventListener("install", event => {
+     event.waitUntil(
+          caches.open(CACHE_NAME)
+            .then(cache => {
+                 return cache.addAll(urlsToCache);
+            })
+     );
+});
+self.addEventListener("fetch", event => {
+     event.respondWith(
+          caches.match(event.request)
+            .then(response => {
+                 return response || fetch(event.request);
+            })
+     );
+});
+Step 10: Register Manifest
+Open:
+Views > Shared > _Layout.cshtml
+Inside the <head> tag, add:
+<link rel="manifest" href="/manifest.json">
+Step 11: Register Service Worker
+In the same _Layout.cshtml file, before the closing </body> tag, add:
+<script>
+     if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(() => console.log('Service Worker Registered'));
+     }
+</script>
+Step 12: Run Application
+Append following in Browser URl: /Students
