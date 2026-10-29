@@ -1,0 +1,42 @@
+Program.cs
+using System;
+class BankAccount
+{
+     //Field
+     private double balance;
+     //Property for Balance
+     public double Balance
+     {
+         get
+         {
+             return balance;
+         }
+         set
+         {
+             if (value >= 0)
+             {
+                 balance = value;
+             }
+             else
+             {
+                 Console.WriteLine("Balance cannot be negative ");
+             }
+         }
+     }
+     //Property for Account Number
+     public int AccountNumber { get; set; }
+}
+class Program
+{
+     static void Main()
+     {
+         BankAccount b = new BankAccount();
+         b.AccountNumber = 101;
+         b.Balance = 5000;
+         Console.WriteLine("Account Number:" + b.AccountNumber);
+         Console.WriteLine("Balance:" + b.Balance);
+         //Negative Balance
+         b.Balance = -2000;
+         Console.ReadLine();
+     }
+}
