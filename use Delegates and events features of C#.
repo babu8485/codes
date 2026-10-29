@@ -1,0 +1,31 @@
+Program.cs
+using System;
+//Delegate Declaration
+public delegate void Message();
+class Test
+{
+     //Event Declaration
+     public event Message Notify;
+     public void Show()
+     {
+         Console.WriteLine("Method inside Test class ");
+         //Raising Event
+         Notify();
+     }
+}
+class Program
+{
+     //Event Handling Method
+     public static void Display()
+     {
+         Console.WriteLine("Event Executed Successfully ");
+     }
+     static void Main()
+     {
+         Test t = new Test();
+         //Attaching method to event
+         t.Notify += Display;
+         t.Show();
+         Console.ReadLine();
+     }
+}
