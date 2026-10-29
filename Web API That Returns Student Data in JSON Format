@@ -1,0 +1,75 @@
+Step 1: Create Web API Project
+         1. Open Visual Studio 2026.
+         2. Click Create a new project.
+         3. Select ASP.NET Core Web API.
+         4. Click Next.
+Step 2: Configure Project
+         •     Project Name: StudentAPI
+         •     Framework: .NET 10 or any latest version available on your machine
+         •     Click Create.
+Step 3: Create Student Model
+         1. Right-click the project.
+         2. Select Add → New Folder.
+         3. Name the folder Models.
+         4. Inside the Models folder, select Add → New Item → Class.
+         5. Name the file Student.cs.
+Write the following code:
+namespace StudentAPI.Models
+{
+     public class Student
+     {
+             public int Id { get; set; }
+             public string Name { get; set; }
+          public string Course { get; set; }
+          public int Age { get; set; }
+     }
+}
+Step 4: Create API Controller
+(If the controller is not already present, follow these steps.)
+         1. Right-click the project.
+         2. Select Add → New Folder.
+         3. Name the folder Controllers.
+         4. Inside the Controllers folder, select Add → Controller.
+         5. Choose API Controller - Empty.
+         6. Name the file StudentController.cs.
+Step 5: Write API Code in the Above File
+Write the following code in StudentController.cs:
+using Microsoft.AspNetCore.Mvc;
+using StudentAPI.Models;
+namespace StudentAPI.Controllers
+{
+     [ApiController]
+     [Route("api/[controller]")]
+     public class StudentController : ControllerBase
+     {
+         [HttpGet]
+         public List<Student> GetStudents()
+         {
+             return new List<Student>()
+             {
+                  new Student
+                  {
+                       Id = 1,
+                       Name = "Rahul",
+                       Course = "BSc IT",
+                       Age = 20
+                  },
+                  new Student
+                  {
+                       Id = 2,
+                       Name = "Sneha",
+                       Course = "BCA",
+                       Age = 21
+                  }
+             };
+         }
+     }
+}
+Step 6: Run Application
+Run the StudentAPI project.
+The terminal or output window will display a local address similar to:
+Now listening on: https://localhost:7270
+The port number may differ on your computer.
+Step 7: Test API
+Open the browser and enter:
+https://localhost:7258/api/student
