@@ -1,0 +1,60 @@
+CookieDemo.aspx
+<%-- NOTE: PDF me sirf Design view ka screenshot hai, isliye ye markup design + code-behind ke IDs dekh ke banaya hai --%>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CookieDemo.aspx.cs" Inherits="Cookies.CookieDemo" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Cookie Demo</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            User Name:
+            <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
+            <br /><br />
+            <asp:Button ID="btnSave" runat="server" Text="Save Cookie" OnClick="btnSave_Click" />
+            <br /><br />
+            <asp:Button ID="btnShow" runat="server" Text="Show Cookie" OnClick="btnShow_Click" />
+            <br /><br />
+            <asp:Label ID="lblOutput" runat="server" Text="Output"></asp:Label>
+        </div>
+    </form>
+</body>
+</html>
+CookieDemo.aspx.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+namespace Cookies
+{
+  public partial class CookieDemo : System.Web.UI.Page
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+     }
+     protected void btnSave_Click(object sender, EventArgs e)
+     {
+             //Session Cookie
+             HttpCookie sessionCookie = new HttpCookie("SessionUser");
+             sessionCookie.Value = txtName.Text;
+             Response.Cookies.Add(sessionCookie);
+             //Persistent Cookie
+             HttpCookie persistentCookie = new HttpCookie("persistentUser");
+             persistentCookie.Value = txtName.Text;
+             persistentCookie.Expires = DateTime.Now.AddDays(7);
+             Response.Cookies.Add(persistentCookie);
+             lblOutput.Text = "Cookies Saved Successfully";
+         }
+         protected void btnShow_Click(object sender, EventArgs e)
+         {
+           string sessionData = Request.Cookies["SessionUser"].Value;
+           string persistentData = Request.Cookies["PersistentUser"].Value;
+             lblOutput.Text="Session Cookie:" +sessionData+
+                "<br/>Persistent Cookie:"+persistentData;
+         }
+     }
+}
