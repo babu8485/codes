@@ -1,0 +1,79 @@
+Step 1: Create Empty Web Project
+     1. Open Visual Studio 2026.
+     2. Click Create a new project.
+     3. Select ASP.NET Core Web App (Model-View-Controller).
+     4. Click Next.
+Step 2: Configure Project
+     •   Project Name: BasicPWA
+     •   Framework: .NET 10 or latest available on your machine
+     •   Click Create.
+Step 3: Enable Static Files
+Open Program.cs.
+Replace the code with:
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.Run();
+Step 4: Create Starting HTML Page
+      1. Right-click wwwroot.
+      2. Select Add → New Item → HTML Page.
+      3. Name the file index.html.
+Step 5: Add the Following HTML Code
+Write the following code in index.html:
+<!DOCTYPE html>
+<html>
+<head>
+     <title>Basic PWA</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="manifest" href="manifest.json">
+</head>
+<body>
+     <h1>My Progressive Web Application</h1>
+     <p>This is the starting page of PWA.</p>
+</body>
+</html>
+Note: Don't miss the following important line.
+<link rel="manifest" href="manifest.json">
+This connects the HTML page with manifest.json.
+Step 6: Create Icons Folder
+      1. Right-click wwwroot.
+      2. Select Add → New Folder.
+         3. Name the folder icons.
+         4. Add any two small, downloaded icon files:
+                 o   icon1.png
+                 o   icon2.png
+Place both files inside the icons folder.
+Step 7: Create Manifest File
+         1. In Solution Explorer, right-click wwwroot.
+         2. Select Add → New Item → JSON File.
+         3. Name the file manifest.json.
+         4. Add the following code to manifest.json.
+{
+    "name": "Basic Progressive Web Application",
+    "short_name": "BasicPWA",
+    "description": "Simple PWA Example",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0d6efd",
+    "orientation": "portrait",
+    "icons": [
+     {
+         "src": "/icons/icon1.png",
+         "sizes": "192x192",
+         "type": "image/png"
+        },
+        {
+            "src": "/icons/icon2.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+Step 8: Run Application
+Run the application.
+The browser opens at an address similar to:
+https://localhost:7262/
+To install the app
+After Install the application look like this
