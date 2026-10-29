@@ -1,0 +1,78 @@
+ Calculator.cs
+
+using System;
+namespace ArithmeticMVC.Models
+{
+    public class Calculator
+    {
+        public double Number1 { get; set; }
+        public double Number2 { get; set; }
+        public string Operation { get; set; }
+        public double Result { get; set; }
+    }
+}
+Index.cshtml
+@model ArithmeticMVC.Models.Calculator
+<h2>Basic Arithmetic Operations</h2>
+<form method="post">
+    <label>First Number:</label>
+    <input asp-for="Number1" />
+    <br /><br />
+    <label>Second Number:</label>
+    <input asp-for="Number2" />
+    <br /><br />
+    <label>Operation:</label>
+    <select asp-for="Operation">
+      <option value="Add">Addition</option>
+      <option value="Subtract">Subtraction</option>
+      <option value="Multiply">Multiplication</option>
+      <option value="Divide">Division</option>
+    </select>
+    <br /><br />
+    <button type="submit">Calculate</button>
+</form>
+@if (Model != null)
+{
+<h3>Result: @Model.Result</h3>
+}
+@if (ViewBag.Message != null)
+{
+<h3>@ViewBag.Message</h3>
+}
+CalculatorController.cs
+using Microsoft.AspNetCore.Mvc;
+using ArithmeticMVC.Models;
+namespace ArithmeticMVC.Controllers
+{
+    public class CalculatorController : Controller
+    {
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Index(Calculator calc)
+        {
+            switch (calc.Operation)
+            {
+                case "Add":
+                  calc.Result = calc.Number1 + calc.Number2;
+                  break;
+                case "Subtract":
+                  calc.Result = calc.Number1 - calc.Number2;
+                  break;
+                case "Multiply":
+                  calc.Result = calc.Number1 * calc.Number2;
+                  break;
+                case "Divide":
+if (calc.Number2 != 0)
+                     calc.Result = calc.Number1 / calc.Number2;
+                  else
+                    ViewBag.Message = "Division by zero is not possible.";
+                  break;
+            }
+            return View(calc);
+        }
+    }
+}
