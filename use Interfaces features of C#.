@@ -1,0 +1,25 @@
+Program.cs
+using System;
+//Interface
+interface IShape
+{
+     void Area();
+}
+//Class implementing interface
+class Square : IShape
+{
+     int side = 5;
+     public void Area()
+     {
+         Console.WriteLine("Area of Square = " + (side * side));
+     }
+}
+class Program
+{
+     static void Main()
+     {
+         Square s = new Square();
+         s.Area();
+         Console.ReadLine();
+     }
+}
