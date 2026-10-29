@@ -1,0 +1,65 @@
+Step 1: Create ASP.NET Core Web API Project
+         1. Open Visual Studio.
+         2. Click Create New Project.
+         3. Select ASP.NET Core Web API.
+         4. Project Name: FactorialAPI
+         5. Select .NET 8.
+         6. Enable OpenAPI Support.
+         7. Click Create.
+Step 2: Create Controller
+In Solution Explorer, create a class file:
+Controllers/MathController.cs
+Add the following code:
+using Microsoft.AspNetCore.Mvc;
+namespace FactorialAPI.Controllers
+{
+     [Route("api/[controller]")]
+     [ApiController]
+     public class MathController : ControllerBase
+     {
+          [HttpGet("factorial/{number}")]
+          public IActionResult GetFactorial(int number)
+          {
+              if (number < 0)
+             {
+                 return BadRequest(
+                   "Factorial not possible for negative numbers.");
+             }
+             long factorial = 1;
+             for (int i = 1; i <= number; i++)
+             {
+                 factorial *= i;
+             }
+             return Ok(new
+             {
+                 Number = number,
+                 Factorial = factorial
+             });
+         }
+     }
+}
+Step 3: Run the Project
+Run the project in Visual Studio.
+The project will start, and a local URL will be displayed.
+Example base URL:
+https://localhost:7260
+The port number may be different on your computer.
+Step 4: Output
+Step 5: Test Using Postman
+     1. Install and open Postman.
+     2. Download Postman from: https://dl.pstmn.io/download/latest/win64
+     3. Select the GET method.
+     4. Enter the following URL:
+https://localhost:7282/api/math/factorial/5
+5. Click Send.
+Expected output:
+200 OK
+Successful response
+{
+    "number": 5,
+    "factorial": 120
+}
+Number Test: Negative Number
+Enter the following URL in Postman:
+https://localhost:7282/api/math/factorial/-2
+Click Send.
