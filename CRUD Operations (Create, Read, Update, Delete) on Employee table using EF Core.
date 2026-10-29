@@ -1,0 +1,65 @@
+Employee.cs
+namespace CRUDOperation.Models
+{
+  public class Employee
+  {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Department { get; set; }
+    public double Salary { get; set; }
+     }
+}
+AppDbContext.cs
+using Microsoft.EntityFrameworkCore;
+using CRUDOperation.Models;
+namespace CRUDOperation.Data
+{
+  public class AppDbContext:DbContext
+  {
+    public AppDbContext(DbContextOptions<AppDbContext>options):base(options)
+    {
+    }
+    public DbSet<Employee> Employees { get; set; }
+  }
+}
+Appsettings.json
+{
+ "Logging": {
+  "LogLevel": {
+    "Default": "Information",
+    "Microsoft.AspNetCore": "Warning"
+  }
+ },
+ "AllowedHosts": "*",
+ "ConnectionStrings": {
+  "MyConnection":
+"Server=(localdb)\\MSSQLLocalDB;Database=EmployeeDB;Trusted_Connection=True;TrustServerCertificate=True",
+    "AppDbContext":
+"Server=(localdb)\\mssqllocaldb;Database=AppDbContext;Trusted_Connection=True;MultipleActiveResultSets=true"
+  }
+}
+Program.cs
+using Microsoft.EntityFrameworkCore;
+using CRUDOperation.Data;
+var builder = WebApplication.CreateBuilder(args);
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
+var app = builder.Build();
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+   app.UseExceptionHandler("/Home/Error");
+   // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+   app.UseHsts();
+}
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization();
+app.MapStaticAssets();
+app.MapControllerRoute(
+  name: "default",
+  pattern: "{controller=Home}/{action=Index}/{id?}")
+  .WithStaticAssets();
+app.Run();
