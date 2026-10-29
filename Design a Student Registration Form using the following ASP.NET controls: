@@ -1,0 +1,82 @@
+StudentForm.aspx
+<%-- NOTE: PDF me sirf Design view ka screenshot hai, isliye ye markup design + code-behind ke IDs dekh ke banaya hai --%>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="StudentForm.aspx.cs" Inherits="StudentRegistration1.StudentForm" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Student Registration</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <asp:Label ID="lblName" runat="server" Text="StudentName :"></asp:Label>
+            <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
+            <br /><br />
+
+            <asp:Label ID="lblGender" runat="server" Text="Gender :"></asp:Label>
+            <asp:RadioButton ID="rbMale" runat="server" GroupName="Gender" Text="Male" />
+            <asp:RadioButton ID="rbFemale" runat="server" GroupName="Gender" Text="Female" />
+            <br /><br />
+
+            <asp:Label ID="lblCourse" runat="server" Text="Course :"></asp:Label>
+            <asp:DropDownList ID="ddlCourse" runat="server">
+                <asp:ListItem>B.Sc.I.T.</asp:ListItem>
+                <asp:ListItem>B.Sc.C.S.</asp:ListItem>
+                <asp:ListItem>BCA</asp:ListItem>
+            </asp:DropDownList>
+            <br /><br />
+
+            <asp:CheckBox ID="chkTerms" runat="server" Text="Accept Terms &amp; Conditions" />
+            <br /><br />
+
+            <asp:Calendar ID="calDate" runat="server"></asp:Calendar>
+            <br />
+
+            <asp:Button ID="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
+            <br /><br />
+
+            <asp:Label ID="lblOutput" runat="server"></asp:Label>
+        </div>
+    </form>
+</body>
+</html>
+StudentForm.aspx.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+namespace StudentRegistration1
+{
+  public partial class StudentForm : System.Web.UI.Page
+  {
+    protected void Page_Load(object sender, EventArgs e)
+    {
+         }
+         protected void btnSubmit_Click(object sender, EventArgs e)
+         {
+           string gender = "";
+             if(rbMale.Checked)
+             {
+                gender = "Male";
+             }
+             else if(rbFemale.Checked)
+             {
+                gender = "Female";
+             }
+             if(chkTerms.Checked)
+             {
+                lblOutput.Text = "Student Name:" + txtName.Text +
+                   "<br/>Gender:" + gender +
+                   "<br/>Course:" + ddlCourse.SelectedValue +
+                   "<br/>Date:" + calDate.SelectedDate.ToShortDateString();
+             }
+             else
+             {
+                lblOutput.Text = "Please accept Terms & Conditions";
+             }
+         }
+     }
+}
