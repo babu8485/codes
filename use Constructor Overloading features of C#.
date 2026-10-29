@@ -1,0 +1,31 @@
+Program.cs
+using System;
+class Student
+{
+     // Default Constructor
+     public Student()
+     {
+         Console.WriteLine("Default Constructor Called");
+     }
+     // Parameterized Constructor
+     public Student(string name)
+     {
+         Console.WriteLine("Student Name: " + name);
+     }
+     // Another Parameterized Constructor
+     public Student(string name, int age)
+     {
+         Console.WriteLine("Student Name: " + name);
+         Console.WriteLine("Student Age: " + age);
+     }
+}
+class Program
+{
+     static void Main()
+     {
+         Student s1 = new Student();
+         Student s2 = new Student("Rahul");
+         Student s3 = new Student("Amit", 20);
+         Console.ReadLine();
+     }
+}
