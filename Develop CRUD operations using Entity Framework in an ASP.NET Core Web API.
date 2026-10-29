@@ -1,0 +1,212 @@
+Step 1: Create ASP.NET Core Web API Project
+     1. Open Visual Studio.
+     2. Click Create New Project.
+     3. Select ASP.NET Core Web API.
+     4. Project Name: StudentAPIWithEF
+     5. Click Next.
+     6. Select:
+            o     .NET 8
+            o     Enable OpenAPI Support (on the Additional Information page).
+     7. Click Create.
+Step 2: Install Entity Framework Core Packages
+Go to:
+Tools → NuGet Package Manager → Manage NuGet Packages
+Install the following packages:
+     1. Microsoft.EntityFrameworkCore
+     2. Microsoft.EntityFrameworkCore.SqlServer
+     3. Microsoft.EntityFrameworkCore.Tools
+     4. Swashbuckle.AspNetCore.SwaggerUI
+     5. Microsoft.EntityFrameworkCore.Design
+Step 3: Create Model Class
+Right-click the project name and create a folder named Models.
+Create a file inside the Models folder named Student.cs.
+Write the following code:
+namespace StudentAPI.Models
+{
+     public class Student
+     {
+         public int Id { get; set; }
+         public string Name { get; set; }
+         public int Age { get; set; }
+         public string Course { get; set; }
+     }
+}
+Step 4: Create DbContext Class
+Right-click the project name and create a folder named Data.
+Inside the Data folder, create a file named AppDbContext.cs.
+Write the following code:
+using Microsoft.EntityFrameworkCore;
+using StudentAPI.Models;
+namespace StudentAPI.Data
+{
+     public class AppDbContext : DbContext
+     {
+         public AppDbContext(
+             DbContextOptions<AppDbContext> options)
+             : base(options)
+         {
+            }
+            public DbSet<Student> Students { get; set; }
+        }
+}
+Step 5: Add LocalDB Connection String
+In Solution Explorer, open the appsettings.json file.
+Add the following connection string inside the JSON object:
+{
+    "ConnectionStrings": {
+  "DefaultConnection":
+"Server=(localdb)\\MSSQLLocalDB;Database=StudentDB;Trusted_Connection=True;"
+    }
+}
+If the file already contains other settings, add the ConnectionStrings section without deleting the
+existing settings.
+Step 6: Configure Database in Program.cs
+In Solution Explorer, open Program.cs and configure the database connection.
+using Microsoft.EntityFrameworkCore;
+using StudentAPI.Data;
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddDbContext<AppDbContext>(options =>
+     options.UseSqlServer(
+       builder.Configuration.GetConnectionString(
+         "DefaultConnection")));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+     app.UseSwagger();
+     app.UseSwaggerUI();
+}
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
+Step 7: Create Controller
+If the Controllers folder does not exist, create it.
+Inside the Controllers folder, create a class file named StudentsController.cs.
+Add the following code:
+using Microsoft.AspNetCore.Mvc;
+using StudentAPI.Data;
+using StudentAPI.Models;
+namespace StudentAPI.Controllers
+{
+     [Route("api/[controller]")]
+     [ApiController]
+     public class StudentsController : ControllerBase
+     {
+         private readonly AppDbContext _context;
+         public StudentsController(AppDbContext context)
+         {
+             _context = context;
+         }
+         // GET ALL STUDENTS
+         [HttpGet]
+         public IActionResult GetStudents()
+         {
+             return Ok(_context.Students.ToList());
+         }
+     // GET STUDENT BY ID
+     [HttpGet("{id}")]
+     public IActionResult GetStudent(int id)
+     {
+         var student = _context.Students.Find(id);
+         if (student == null)
+           return NotFound();
+         return Ok(student);
+     }
+     // INSERT STUDENT
+     [HttpPost]
+     public IActionResult AddStudent(Student student)
+     {
+         _context.Students.Add(student);
+         _context.SaveChanges();
+         return Ok(student);
+     }
+     // UPDATE STUDENT
+     [HttpPut("{id}")]
+     public IActionResult UpdateStudent(int id, Student student)
+     {
+         var data = _context.Students.Find(id);
+         if (data == null)
+           return NotFound();
+         data.Name = student.Name;
+         data.Age = student.Age;
+         data.Course = student.Course;
+         _context.SaveChanges();
+         return Ok(data);
+     }
+     // DELETE STUDENT
+     [HttpDelete("{id}")]
+     public IActionResult DeleteStudent(int id)
+     {
+         var student = _context.Students.Find(id);
+         if (student == null)
+           return NotFound();
+         _context.Students.Remove(student);
+              _context.SaveChanges();
+              return Ok();
+          }
+     }
+}
+Step 8: Create Database Using Migration
+Open:
+Tools → NuGet Package Manager → Package Manager Console
+Run the following commands one by one:
+Add-Migration InitialCreate
+Update-Database
+These commands will create the StudentDB database and the Students table in SQL Server
+LocalDB.
+Step 9: Run the Project
+         1. Run the project in Visual Studio.
+         2. The Swagger UI should open automatically if Swagger is configured and the project is
+            running in the Development environment.
+         3. Example URL:
+https://localhost:7254/swagger
+Step 10: Test CRUD Operations
+Test the following operations through Swagger or another API testing tool.
+1. Insert Student
+Method: POST
+Endpoint:
+/api/students
+Request body:
+{
+    "name": "Rahul",
+    "age": 21,
+    "course": "BCA"
+}
+2. View All Students
+Method: GET
+Endpoint:
+/api/students
+This displays all student records.
+3. Get Student by ID
+Method: GET
+Endpoint:
+/api/students/1
+This displays the student whose ID is 2.
+4. Update Student
+Method: PUT
+Endpoint:
+/api/students/1
+Request body:
+{
+    "name": "Rahul Sharma",
+    "age": 22,
+    "course": "MCA"
+}
+This updates the details of the student with ID 2.
+5. Delete Student
+Method: DELETE
+Endpoint: /api/students/1
+This deletes the student whose ID is 1.
+Step 11: View Database in Visual Studio
+Go to:
+View → SQL Server Object Explorer
+Navigate to:
+(localdb)\MSSQLLocalDB
+     └── Databases
+       └── StudentDB
+         └── Tables
+           └── dbo.Students
+You can view the inserted student records directly in the database.
